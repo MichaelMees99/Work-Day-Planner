@@ -1,9 +1,9 @@
 $(function () {
-  // Display the current date in the header
+  // this displays the current time in the header
   var currentDay = dayjs().format("MMM D, YYYY");
   $("#currentDay").text("Today is " + currentDay);
 
-  // Function to generate time-blocks dynamically
+  // this function creates time-block dynamically
   function generateTimeBlocks() {
     var container = $(".container-fluid");
 
@@ -23,13 +23,11 @@ $(function () {
     }
   }
 
-  // Function to update the color of the time blocks
+  // this function changes the color of the time-blocks depending on the time
   function updateTimeBlocks() {
     $(".time-block").each(function() {
       var hour = parseInt($(this).attr("id").split("-")[1]);
       var currentHour = parseInt(dayjs().format('H'));
-
-      $(this).removeClass("past present future");
 
       if (hour < currentHour) {
         $(this).addClass("past");
@@ -41,22 +39,31 @@ $(function () {
     });
   }
 
-  // Generate time blocks
+  // This generate time blocks
   generateTimeBlocks();
-  // Update time blocks immediately and then every minute
+  // This updates the time blocks immediately and then every minute
   updateTimeBlocks();
   setInterval(updateTimeBlocks, 60000);
 
-  // Event listener for the save buttons
+  // This is an Event listener for the save buttons
   $(document).on("click", ".saveBtn", function() {
     var hour = $(this).parent().attr("id");
     var text = $(this).siblings(".description").val();
-
-    // Save the text to local storage
+  
+    // This saves the text to local storage
     localStorage.setItem(hour, text);
+  
+    // This displays a success message for information that has stored on local storage and places it above the time-blocks
+    var successMessage = $("<div>").addClass("alert alert-success").text("Saved to local storage!");
+    $(".container-fluid").prepend(successMessage);
+  
+    // This removes the success message after 3 seconds
+    setTimeout(function() {
+      successMessage.remove();
+    }, 3000);
   });
 
-  // Retrieve the saved events from local storage
+  // This retrieves the saved events from local storage
   $(".time-block").each(function() {
     var hour = $(this).attr("id");
     var text = localStorage.getItem(hour);
